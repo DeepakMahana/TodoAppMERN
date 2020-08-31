@@ -13,12 +13,16 @@ if (process.env.NODE_ENV === 'development') {
 // Connect to MongoDB
 const mongo = require('./middleware/mongo');
 
-const userrouter = require('./routers/user')
+// Middlewares
 app.use(bodyParser.json())
 app.use(bodyParser.raw())
 app.use(cors())
 
+// Routers
+const userrouter = require('./routers/user')
 app.use('/api/user/', userrouter)
+const todorouter = require('./routers/todo')
+app.use('/api/todo/', todorouter)
 
 const port = process.env.SERVICE_PORT || 3000
 const server = http.createServer(app)

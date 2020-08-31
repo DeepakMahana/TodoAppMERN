@@ -51,9 +51,10 @@ let loginUser = async (username, password) => {
     // Compare Hash for password
     let match = await bcrypt.compare(password, userDetails.password);
     if (!match) throw new Error(`Incorrect Password`)
-
+    
+    let userid = userDetails._id;
     // Generate JWT Token
-    let jwtToken = jwt.sign({ username, password }, MISC.JWT_SALT);
+    let jwtToken = jwt.sign({ userid, username, password }, MISC.JWT_SALT);
 
     return {
         status: userDetails == null ? MESSAGES.RESPONSE_STATUS.failed : MESSAGES.RESPONSE_STATUS.success,
