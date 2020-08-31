@@ -1,0 +1,11 @@
+.vscode/*
+env.json
+node_modules/
+*.*.swp
+.jshintrc
+
+# Ignore sensitive files
+*fpshadow*
+
+# npm node module
+package-lock.json

@@ -1,0 +1,7 @@
+{
+    "LOGS_INFO": true,
+    "MONGO_URI": "mongodb+srv://dcoder:dcoder123@cluster0.ryzqm.mongodb.net/todoapp",
+    "SERVICE_PORT": 3000,
+    "JWT_SALT": "qwertrtytf",
+    "BYCRYPT_SALT": 10
+}
