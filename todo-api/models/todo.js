@@ -22,8 +22,21 @@ const TodosSchema = new Schema({
     },
 
     subtasks: [{
-        type: Schema.Types.ObjectId,
-        ref: 'SubTask'
+
+        todotitle: {
+            type: String,
+            required: true
+        },
+
+        tododesc: {
+            type: String,
+            required: false
+        },
+
+        createdAt: {
+            type: Date,
+            default: Date.now()
+        }
     }]
 
 });

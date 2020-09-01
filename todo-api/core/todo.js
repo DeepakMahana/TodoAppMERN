@@ -45,7 +45,7 @@ let addTodo = async (userid, todotitle, tododesc) => {
         return {
             status: MESSAGES.RESPONSE_STATUS.success,
             message: `Todo Created Successfully`,
-            data: todo
+            data: null
         }
 
     } catch (err) {
@@ -81,7 +81,7 @@ let deleteTodo = async (userid, todoid) => {
         let unlinktodo = await User.findOneAndUpdate({ _id: userid }, { "$pull": { "todoId": todo._id } })
             .then(res => {
                 let val = JSON.parse(JSON.stringify(res));
-                log(`User Details: ${JSON.stringify(val)}`);
+                // log(`User Details: ${JSON.stringify(val)}`);
                 return val;
             }).catch(err => {
                 log(`No User Found with username : ${username}`, true, true);
@@ -94,7 +94,7 @@ let deleteTodo = async (userid, todoid) => {
         return {
             status: MESSAGES.RESPONSE_STATUS.success,
             message: `Todo Deleted Successfully`,
-            data: todo
+            data: null
         }
 
     } catch (err) {
@@ -108,7 +108,56 @@ let deleteTodo = async (userid, todoid) => {
     }
 }
 
+let addSubTask = async (todoid, todotitle, tododesc) => {
+
+    // Create a new SubTask
+    let newSubTask = {
+        todotitle: todotitle,
+        tododesc: tododesc
+    }
+
+    // Save SubTask into Todo
+    let subtask = await Todo.findByIdAndUpdate({ _id: todoid }, { "$push": { "subtasks": newSubTask } })
+        .then(res => {
+            let val = JSON.parse(JSON.stringify(res));
+            log(`Todo Subtask Created : ${JSON.stringify(val)}`);
+            return val;
+        }).catch(err => {
+            log(`Error creating Todo's Subtask, err: ${err.message}`, true, true)
+            return null;
+        })
+
+    return {
+        status: subtask == null ? MESSAGES.RESPONSE_STATUS.failed : MESSAGES.RESPONSE_STATUS.success,
+        message: subtask == null ? `Failed to create a Subtask` : `Subtask Created Successfully`,
+        data: null
+    }
+
+}
+
+let deleteSubTask = async (todoid, subtaskid) => {
+
+    // Delete a subtask of a particular Todo
+    let subtask = await Todo.findByIdAndUpdate(todoid, { $pull: { 'subtasks': { _id: subtaskid } } })
+        .then(res => {
+            let val = JSON.parse(JSON.stringify(res));
+            log(`Todo Subtask Deleted : ${JSON.stringify(val)}`);
+            return val;
+        }).catch(err => {
+            log(`Error Deleting Todo's Subtask, err: ${err.message}`, true, true)
+            return null;
+        })
+
+    return {
+        status: subtask == null ? MESSAGES.RESPONSE_STATUS.failed : MESSAGES.RESPONSE_STATUS.success,
+        message: subtask == null ? `Failed to delete a Subtask` : `Subtask Deleted Successfully`,
+        data: null
+    }
+}
+
 module.exports = {
     addTodo,
-    deleteTodo
+    deleteTodo,
+    addSubTask,
+    deleteSubTask
 }

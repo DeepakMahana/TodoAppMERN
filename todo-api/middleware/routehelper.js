@@ -105,7 +105,7 @@ let deleteTodo = async (req) => {
     try {
 
         let userid = req.user_details.userid;
-        let todoid = req.todoid;
+        let todoid = req.todoid.toString().trim();
 
         // Validations
         if (NULLCHECK.includes(todoid)) throw new Error('Todo ID Required');
@@ -131,12 +131,76 @@ let deleteTodo = async (req) => {
 }
 
 // Add a SubTask
+let addSubTask = async (req) => {
+
+    try {
+
+        // let userid = req.user_details.userid;
+        let todoid = req.todoid.toString().trim();
+        let todotitle = req.todotitle.toString().trim();
+        let tododesc = req.tododesc.toString().trim();
+
+        // Validations
+        if (NULLCHECK.includes(todoid)) throw new Error('Todo ID Required');
+        if (NULLCHECK.includes(todotitle)) throw new Error('Todo Title Required');
+        if (NULLCHECK.includes(tododesc)) throw new Error('Todo Description Required');
+
+        // Core Logic
+        let todoRes = await TODO.addSubTask(todoid, todotitle, tododesc);
+
+        // Return response
+        return {
+            status: todoRes.status,
+            message: todoRes.message,
+            data: todoRes.data
+        }
+
+    } catch (err) {
+        return {
+            status: MESSAGES.RESPONSE_STATUS.failed,
+            message: err.message,
+            data: null
+        }
+    }
+}
 
 // Delete a SubTask
+let deleteSubTask = async (req) => {
+
+    try {
+
+        // let userid = req.user_details.userid;
+        let todoid = req.todoid.toString().trim();
+        let subtaskid = req.subtaskid.toString().trim();
+
+        // Validations
+        if (NULLCHECK.includes(todoid)) throw new Error('Todo ID Required');
+        if (NULLCHECK.includes(subtaskid)) throw new Error('Todo Subtask ID Required');
+
+        // Core Logic
+        let todoRes = await TODO.deleteSubTask(todoid, subtaskid);
+
+        // Return response
+        return {
+            status: todoRes.status,
+            message: todoRes.message,
+            data: todoRes.data
+        }
+
+    } catch (err) {
+        return {
+            status: MESSAGES.RESPONSE_STATUS.failed,
+            message: err.message,
+            data: null
+        }
+    }
+}
 
 module.exports = {
     register,
     login,
     addTodo,
-    deleteTodo
+    deleteTodo,
+    addSubTask,
+    deleteSubTask
 }
