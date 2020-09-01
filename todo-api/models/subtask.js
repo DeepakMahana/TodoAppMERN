@@ -3,8 +3,8 @@ const mongoose = require('mongoose');
 // Initalize Schema
 const Schema = mongoose.Schema
 
-// Define a TodoSchema
-const TodosSchema = new Schema({
+// Define a SubTaskSchema
+const SubTaskSchema = new Schema({
 
     todotitle: {
         type: String,
@@ -19,17 +19,10 @@ const TodosSchema = new Schema({
     createdAt: {
         type: Date,
         default: Date.now()
-    },
-
-    subtasks: [{
-        type: Schema.Types.ObjectId,
-        ref: 'SubTask'
-    }]
+    }
 
 });
 
 // Define and Export Model
-const Todos = mongoose.model('Todos', TodosSchema);
-module.exports = Todos;
-
-
+const SubTask = mongoose.model('SubTask', SubTaskSchema);
+module.exports = SubTask;

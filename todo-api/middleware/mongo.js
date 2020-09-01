@@ -9,7 +9,8 @@ const options = {
     keepAlive: true,
     useNewUrlParser: true,
     useCreateIndex: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useFindAndModify: false
 };
 
 let DB_URI = process.env.MONGO_URI;

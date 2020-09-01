@@ -1,6 +1,7 @@
 const MESSAGES = require('../constant/messages');
 const UTIL = require('../util/utility');
 const USER = require('../core/user');
+const TODO = require('../core/todo');
 const NULLCHECK = [undefined, null, ''];
 
 // Register 
@@ -66,8 +67,76 @@ let login = async (req) => {
 }
 
 // Add Todo
+let addTodo = async (req) => {
+
+    try {
+
+        let userid = req.user_details.userid;
+        let todotitle = req.todotitle.toString().trim();
+        let tododesc = req.tododesc.toString().trim();
+
+        // Validations
+        if (NULLCHECK.includes(todotitle)) throw new Error('Todo Title Required');
+        if (NULLCHECK.includes(tododesc)) throw new Error('Todo Description Required');
+
+        // Core Logic
+        let todoRes = await TODO.addTodo(userid, todotitle, tododesc);
+
+        // Return response
+        return {
+            status: todoRes.status,
+            message: todoRes.message,
+            data: todoRes.data
+        }
+
+    } catch (err) {
+        return {
+            status: MESSAGES.RESPONSE_STATUS.failed,
+            message: err.message,
+            data: null
+        }
+    }
+
+}
+
+// Delete Todo
+let deleteTodo = async (req) => {
+
+    try {
+
+        let userid = req.user_details.userid;
+        let todoid = req.todoid;
+
+        // Validations
+        if (NULLCHECK.includes(todoid)) throw new Error('Todo ID Required');
+
+        // Core Logic
+        let todoRes = await TODO.deleteTodo(userid, todoid);
+
+        // Return response
+        return {
+            status: todoRes.status,
+            message: todoRes.message,
+            data: todoRes.data
+        }
+
+    } catch (err) {
+        return {
+            status: MESSAGES.RESPONSE_STATUS.failed,
+            message: err.message,
+            data: null
+        }
+    }
+
+}
+
+// Add a SubTask
+
+// Delete a SubTask
 
 module.exports = {
     register,
-    login
+    login,
+    addTodo,
+    deleteTodo
 }

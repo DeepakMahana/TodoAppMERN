@@ -7,12 +7,12 @@ const apiAccessCheck = require('../middleware/apiaccess').validateToken;
 todorouter.use(apiAccessCheck)
 
 todorouter.post('/addtodo', async (req, res, next) => {
-    let apires = await helpers.addtodo(req.body);
+    let apires = await helpers.addTodo(req.body);
     return res.status(200).json(apires);
 })
 
 todorouter.post('/deletetodo', async (req, res, next) => {
-    let apires = await helpers.deletetodo(req.body);
+    let apires = await helpers.deleteTodo(req.body);
     return res.status(200).json(apires);
 })
 

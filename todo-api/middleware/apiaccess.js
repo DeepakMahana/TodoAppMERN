@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const MISC = require('../constant/misc');
 const MESSAGES = require('../constant/messages');
 
-let validateToken = (req, res, next) => {
+let validateToken = async (req, res, next) => {
 
     // Header Checks
     let statusCode = 400;
@@ -35,7 +35,7 @@ let validateToken = (req, res, next) => {
         statusCode = 500;
         if (typeof result == 'string') return res.status(statusCode).json({ status: MESSAGES.RESPONSE_STATUS.failed, message: result })
 
-        req["body"]["user_details"] = { id: result.id, username: result.username }
+        req["body"]["user_details"] = { userid: result.userid, username: result.username }
         next()
 
     } catch (err) {
@@ -52,8 +52,8 @@ let verifyToken = (token) => {
                 if (err) {
                     reject("Invalid Token Key");
                 } else {
-                    let { id, username } = res;
-                    resolve({ id, username });
+                    let { userid, username } = res;
+                    resolve({ userid, username });
                 }
             })
         })
