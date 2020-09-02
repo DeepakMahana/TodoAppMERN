@@ -155,9 +155,32 @@ let deleteSubTask = async (todoid, subtaskid) => {
     }
 }
 
+let todolist = async userid => {
+
+    // Fetch all todos of a user
+    let todos = await User.findById({ _id: userid }).populate('todoId')
+        .then(res => {
+            let val = JSON.parse(JSON.stringify(res));
+            let todos = val.todoId;
+            log(`User Todo's : ${JSON.stringify(todos)}`);
+            return todos;
+        }).catch(err => {
+            log(`Failed to fetch User Todos, err: ${err.message}`, true, true)
+            return null;
+        })
+
+    return {
+        status: todos == null ? MESSAGES.RESPONSE_STATUS.failed : MESSAGES.RESPONSE_STATUS.success,
+        message: todos == null ? `Failed to fetch todos` : `Todos Found`,
+        data: todos
+    }
+}
+
+
 module.exports = {
     addTodo,
     deleteTodo,
     addSubTask,
-    deleteSubTask
+    deleteSubTask,
+    todolist
 }

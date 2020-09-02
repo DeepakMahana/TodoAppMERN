@@ -26,4 +26,9 @@ todorouter.post('/deletesubtask', async (req, res, next) => {
     return res.status(200).json(apires);
 })
 
+todorouter.get('/list', async (req, res, next) => {
+    let apires = await helpers.todolist(req.body);
+    return res.status(200).json(apires);
+})
+
 module.exports = todorouter

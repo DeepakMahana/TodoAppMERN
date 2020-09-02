@@ -196,11 +196,41 @@ let deleteSubTask = async (req) => {
     }
 }
 
+let todolist = async (req) => {
+
+    try {
+
+        // let userid = req.user_details.userid;
+        let userid = req.user_details.userid.toString().trim();
+
+        // Validations
+        if (NULLCHECK.includes(userid)) throw new Error('Invalid Request');
+
+        // Core Logic
+        let todoRes = await TODO.todolist(userid);
+
+        // Return response
+        return {
+            status: todoRes.status,
+            message: todoRes.message,
+            data: todoRes.data
+        }
+
+    } catch (err) {
+        return {
+            status: MESSAGES.RESPONSE_STATUS.failed,
+            message: err.message,
+            data: null
+        }
+    }
+}
+
 module.exports = {
     register,
     login,
     addTodo,
     deleteTodo,
     addSubTask,
-    deleteSubTask
+    deleteSubTask,
+    todolist
 }
