@@ -46,9 +46,8 @@ class subtask extends Component {
 
         if(this.state.subtask){
             return (
-                <Grid container spacing={2}>
-                
-                    <Grid item xs={12} sm={6} key={subtask._id}>
+                <Grid container spacing={2} alignItems="center" justify="center">
+                    <Grid item xs={12} key={subtask._id}>
                         <Card className={classes.root}>
                         <CardHeader
                             action={
@@ -75,8 +74,6 @@ class subtask extends Component {
                 </Typography>
             )
         }
-
-        
     }
 }
 

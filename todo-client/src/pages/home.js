@@ -28,7 +28,8 @@ const drawerWidth = 240;
 
 const styles = (theme) => ({
 	root: {
-		display: 'flex'
+        marginTop: '40px',
+        display: 'flex'
 	},
 	appBar: {
 		zIndex: theme.zIndex.drawer + 1
@@ -101,9 +102,9 @@ class home extends Component {
                 let respData = response.data;
                 if(respData.status.toUpperCase() === "FAILED"){
                     this.setState({ errorMsg: 'Error in retrieving the data' });
-					showErrorMessage(respData.message)
+					// showErrorMessage(respData.message)
                 }else{
-					showSuccessMessage(respData.message)
+					// showSuccessMessage(respData.message)
                     this.setState({
                         email: respData.data.email,
                         username: respData.data.username,

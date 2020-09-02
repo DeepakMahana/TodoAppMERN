@@ -4,7 +4,6 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import clsx from 'clsx';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -17,25 +16,20 @@ import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardHeader from '@material-ui/core/CardHeader';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import CardContent from '@material-ui/core/CardContent';
-import Collapse from '@material-ui/core/Collapse';
+import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import MuiDialogActions from '@material-ui/core/DialogActions';
 
 import axios from 'axios';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import TodoCard from './todocard';
-import { GET_USER_TODOS_API, authMiddleWare, showSuccessMessage, showErrorMessage} from '../util/utility';
+import { GET_USER_TODOS_API, ADD_TODO_API, authMiddleWare, showSuccessMessage, showErrorMessage} from '../util/utility';
 
 const styles = (theme) => ({
     root: {
-        marginTop: '15px',
-        marginLeft: '15px',
-        minWidth: 400,
-        maxWidth: 500
+    
     },
 	title: {
 		marginLeft: theme.spacing(2),
@@ -51,13 +45,15 @@ const styles = (theme) => ({
 	},
 	floatingButton: {
 		position: 'fixed',
-		bottom: 0,
-		right: 0
+		top: 70,
+        right: 0,
+        marginTop: '10px',
+        marginRight: '10px'
 	},
 	form: {
-		width: '98%',
-		marginLeft: 13,
-		marginTop: theme.spacing(3)
+        width: '100%',
+        height: '100%',
+		margin: '0 auto'
 	},
 	toolbar: theme.mixins.toolbar,
 	bullet: {
@@ -77,36 +73,42 @@ const styles = (theme) => ({
 		top: '35%'
 	},
 	dialogeStyle: {
-		maxWidth: '50%'
-	},
-	viewRoot: {
-		margin: 0,
-		padding: theme.spacing(2)
+		maxWidth: '60%'
 	},
 	closeButton: {
 		position: 'absolute',
 		right: theme.spacing(1),
 		top: theme.spacing(1),
 		color: theme.palette.grey[500]
-    },
-    actions: {
-        display: 'flex'
-    },
-    expand: {
-        transform: 'rotate(0deg)',
-        marginLeft: 'auto',
-        transition: theme.transitions.create('transform', {
-          duration: theme.transitions.duration.shortest,
-        }),
-    },
-    expandOpen: {
-        transform: 'rotate(180deg)',
     }
 });
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-	return <Slide direction="up" ref={ref} {...props} />;
+const DialogTitle = withStyles(styles)((props) => {
+    const { children, classes, onClose, ...other } = props;
+    return (
+        <MuiDialogTitle disableTypography className={classes.root} {...other}>
+            <Typography variant="h6">{children}</Typography>
+            {onClose ? (
+                <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+                    <CloseIcon />
+                </IconButton>
+            ) : null}
+        </MuiDialogTitle>
+    );
 });
+
+const DialogContent = withStyles((theme) => ({
+    viewRoot: {
+        padding: theme.spacing(2)
+    }
+}))(MuiDialogContent);
+
+const DialogActions = withStyles((theme) => ({
+    root: {
+      margin: 0,
+      padding: theme.spacing(1),
+    },
+}))(MuiDialogActions);
 
 class todo extends Component {
 	constructor(props) {
@@ -119,9 +121,6 @@ class todo extends Component {
 			buttonType: '',
             viewOpen: false
 		};
-		this.deleteTodoHandler = this.deleteTodoHandler.bind(this);
-		this.handleEditClickOpen = this.handleEditClickOpen.bind(this);
-		this.handleViewOpen = this.handleViewOpen.bind(this);
     }
 
 	handleChange = (event) => {
@@ -144,7 +143,7 @@ class todo extends Component {
 					});
 					showErrorMessage(respData.message)
                 }else{
-					showSuccessMessage(respData.message)
+					// showSuccessMessage(respData.message)
                     this.setState({
                         todos: respData.data,
                         uiLoading: false
@@ -193,27 +192,7 @@ class todo extends Component {
 	}
 
 	render() {
-
-		const DialogTitle = withStyles(styles)((props) => {
-			const { children, classes, onClose, ...other } = props;
-			return (
-				<MuiDialogTitle disableTypography className={classes.root} {...other}>
-					<Typography variant="h6">{children}</Typography>
-					{onClose ? (
-						<IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
-							<CloseIcon />
-						</IconButton>
-					) : null}
-				</MuiDialogTitle>
-			);
-		});
-
-		const DialogContent = withStyles((theme) => ({
-			viewRoot: {
-				padding: theme.spacing(2)
-			}
-		}))(MuiDialogContent);
-
+		
         dayjs.extend(relativeTime);
         
 		const { classes } = this.props;
@@ -221,46 +200,41 @@ class todo extends Component {
 
 		const handleClickOpen = () => {
 			this.setState({
-				todoId: '',
 				title: '',
-				body: '',
+				description : '',
 				buttonType: '',
 				open: true
 			});
 		};
 
-		const handleSubmit = (event) => {
-			// authMiddleWare(this.props.history);
-			// event.preventDefault();
-			// const userTodo = {
-			// 	title: this.state.title,
-			// 	body: this.state.body
-			// };
-			// let options = {};
-			// if (this.state.buttonType === 'Edit') {
-			// 	options = {
-			// 		url: `/todo/${this.state.todoId}`,
-			// 		method: 'put',
-			// 		data: userTodo
-			// 	};
-			// } else {
-			// 	options = {
-			// 		url: '/todo',
-			// 		method: 'post',
-			// 		data: userTodo
-			// 	};
-			// }
-			// const authToken = localStorage.getItem('AuthToken');
-			// axios.defaults.headers.common = { Authorization: `${authToken}` };
-			// axios(options)
-			// 	.then(() => {
-			// 		this.setState({ open: false });
-			// 		window.location.reload();
-			// 	})
-			// 	.catch((error) => {
-			// 		this.setState({ open: true, errors: error.response.data });
-			// 		console.log(error);
-			// 	});
+		const createTodo = (event) => {
+			authMiddleWare(this.props.history);
+			event.preventDefault();
+			const userTodo = {
+				todotitle: this.state.title,
+				tododesc: this.state.description
+			};
+			const authToken = localStorage.getItem('AuthToken');
+			axios.defaults.headers.common = { Authorization: `${authToken}` };
+            axios
+                .post(ADD_TODO_API, userTodo)
+				.then((response) => {
+                    let respData = response.data;
+                    if(respData.status.toUpperCase() === "FAILED"){
+                        this.setState({
+                            open: false
+                        });
+                        showErrorMessage(respData.message)
+                    }else{
+                        showSuccessMessage(respData.message)
+                        this.setState({ open: false });
+					    window.setTimeout(function(){window.location.reload()},500)
+                    }
+				})
+				.catch((error) => {
+                    showErrorMessage(error)
+					this.setState({ open: false });
+				});
 		};
 
 		const handleViewClose = () => {
@@ -268,8 +242,15 @@ class todo extends Component {
 		};
 
 		const handleClose = (event) => {
-			this.setState({ open: false });
+            this.setState({ open: false });
         };
+
+        const resetForm = () => {
+            this.setState({
+                title: '',
+                description: ''
+            })
+        }
         
 		if (this.state.uiLoading === true) {
 			return (
@@ -283,87 +264,78 @@ class todo extends Component {
 				<main className={classes.content}>
 					<div className={classes.toolbar} />
 
-					<IconButton
-						className={classes.floatingButton}
-						color="primary"
+                    {/* Add Todo Button */}
+					<Button
+                        className={classes.floatingButton}
+                        variant="contained"
+						color="secondary"
 						aria-label="Add Todo"
 						onClick={handleClickOpen}
 					>
-						<AddCircleIcon style={{ fontSize: 60 }} />
-					</IconButton>
+						Add Todo
+					</Button>
 
-					<Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
-						<AppBar className={classes.appBar}>
-							<Toolbar>
-								<IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
-									<CloseIcon />
-								</IconButton>
-								<Typography variant="h6" className={classes.title}>
-									{this.state.buttonType === 'Edit' ? 'Edit Todo' : 'Create a new Todo'}
-								</Typography>
-								<Button
-									autoFocus
-									color="inherit"
-									onClick={handleSubmit}
-									className={classes.submitButton}
-								>
-									{this.state.buttonType === 'Edit' ? 'Save' : 'Submit'}
-								</Button>
-							</Toolbar>
-						</AppBar>
-
-						<form className={classes.form} noValidate>
-							<Grid container spacing={2}>
-								<Grid item xs={12}>
-									<TextField
-										variant="outlined"
-										required
-										fullWidth
-										id="todoTitle"
-										label="Todo Title"
-										name="title"
-										autoComplete="todoTitle"
-										helperText={errors.title}
-										value={this.state.title}
-										error={errors.title ? true : false}
-										onChange={this.handleChange}
-									/>
-								</Grid>
-								<Grid item xs={12}>
-									<TextField
-										variant="outlined"
-										required
-										fullWidth
-										id="todoDetails"
-										label="Todo Details"
-										name="body"
-										autoComplete="todoDetails"
-										multiline
-										rows={25}
-										rowsMax={25}
-										helperText={errors.body}
-										error={errors.body ? true : false}
-										onChange={this.handleChange}
-										value={this.state.body}
-									/>
-								</Grid>
-							</Grid>
-						</form>
-					</Dialog>
+                    <Dialog open={open} onClose={handleClose} aria-labelledby="customized-dialog-title">
+                        <DialogTitle id="customized-dialog-title" onClose={handleClose}>Add A Todo Task</DialogTitle>
+                        <DialogContent>
+                            <form className={classes.form} noValidate>
+                                <Grid container spacing={2}>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            variant="outlined"
+                                            required
+                                            fullWidth
+                                            id="title"
+                                            label="Todo Title"
+                                            name="title"
+                                            autoComplete="title"
+                                            helperText={errors.title}
+                                            value={this.state.title}
+                                            error={errors.title ? true : false}
+                                            onChange={this.handleChange}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            variant="outlined"
+                                            required
+                                            fullWidth
+                                            id="description"
+                                            label="Todo Description"
+                                            name="description"
+                                            autoComplete="description"
+                                            multiline
+                                            rows={5}
+                                            rowsMax={5}
+                                            helperText={errors.description}
+                                            error={errors.description ? true : false}
+                                            onChange={this.handleChange}
+                                            value={this.state.description}
+                                        />
+                                    </Grid>
+                                </Grid>
+                            </form>
+                        </DialogContent>
+                        <DialogActions>
+                        <Button onClick={createTodo} color="primary" variant="contained">
+                            Submit
+                        </Button>
+                        <Button onClick={resetForm} color="inherit" variant="contained">
+                            Reset
+                        </Button>
+                        </DialogActions>
+                    </Dialog>
 
                     {/* Todo Card Details */}
-
 					<Grid container spacing={2}>
-                        
                         { 
                             this.state.todos.map((todo) => (
                                  <TodoCard key={todo._id} data = { todo } ></TodoCard>
 						    ))
                         }
-
 					</Grid>
 
-					<Dialog
+					{/* <Dialog
 						onClose={handleViewClose}
 						aria-labelledby="customized-dialog-title"
 						open={viewOpen}
@@ -388,9 +360,9 @@ class todo extends Component {
 								}}
 							/>
 						</DialogContent>
-					</Dialog>
+					</Dialog> */}
+
 				</main>
-            
         
             );
 		}

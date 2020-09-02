@@ -32,7 +32,7 @@ export const showSuccessMessage = (message, timeout) => {
     Alert.success(message, {
         position: 'bottom-right',
         effect: 'slide',
-        timeout: timeout ? timeout : 5000,
+        timeout: timeout ? timeout : 3000,
     });
 };
 
@@ -45,7 +45,7 @@ export const showErrorMessage = (message, timeout) => {
     Alert.error(message, {
         position: 'bottom-right',
         effect: 'slide',
-        timeout: timeout ? timeout : 5000,
+        timeout: timeout ? timeout : 3000,
     });
 };
 
@@ -58,6 +58,6 @@ export const showWarningMessage = (message, timeout) => {
     Alert.warning(message, {
         position: 'bottom-right',
         effect: 'slide',
-        timeout: timeout ? timeout : 5000,
+        timeout: timeout ? timeout : 3000,
     });
 };
