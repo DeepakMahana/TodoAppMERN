@@ -12,7 +12,7 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import axios from 'axios';
-import { USER_REGISTER_API } from '../utility';
+import { showSuccessMessage, showErrorMessage, USER_REGISTER_API } from '../util/utility';
 
 const styles = (theme) => ({
 	paper: {
@@ -77,17 +77,18 @@ class signup extends Component {
 			.then((response) => {
                 let respData = response.data;	
                 if(respData.status.toUpperCase() === "FAILED"){
+					showErrorMessage(respData.message)
                     this.setState({
-                        errors: respData.message,
                         loading: false
-                    });
+					});
                 }else{
+					showSuccessMessage(respData.message)
                     this.props.history.push('/login');
                 }
 			})
 			.catch((error) => {
+				showErrorMessage(error)
 				this.setState({
-					errors: error.response.data,
 					loading: false
 				});
 			});

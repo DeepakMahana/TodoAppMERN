@@ -12,7 +12,7 @@ import Container from '@material-ui/core/Container';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import axios from 'axios';
-import { USER_LOGIN_API } from '../utility';
+import {  showSuccessMessage, showErrorMessage, USER_LOGIN_API } from '../util/utility';
 
 const styles = (theme) => ({
 	paper: {
@@ -81,10 +81,11 @@ class login extends Component {
                 let respData = response.data;
                 if(respData.status.toUpperCase() === "FAILED"){
                     this.setState({
-                        errors: respData.message,
                         loading: false
-                    });
+					});
+					showErrorMessage(respData.message)
                 }else{
+					showSuccessMessage(respData.message)
                     let authToken = respData.data.token;
                     localStorage.setItem('AuthToken', `Bearer ${authToken}`);
                     this.setState({ 
@@ -93,10 +94,9 @@ class login extends Component {
                     this.props.history.push('/');
                 }
 			})
-			.catch((error) => {	
-                console.log(error);			
+			.catch((error) => {
+				showErrorMessage(error)			
 				this.setState({
-					errors: error.response,
 					loading: false
 				});
 			});

@@ -51,7 +51,7 @@ let loginUser = async (username, password) => {
     // Compare Hash for password
     let match = await bcrypt.compare(password, userDetails.password);
     if (!match) throw new Error(`Incorrect Password`)
-    
+
     let userid = userDetails._id;
     // Generate JWT Token
     let jwtToken = jwt.sign({ userid, username, password }, MISC.JWT_SALT);
@@ -63,7 +63,29 @@ let loginUser = async (username, password) => {
     }
 }
 
+let userinfo = async (userid) => {
+
+    // Find User Info using Username
+    let userDetails = await User.findOne({ _id: userid }, '_id username email')
+        .then(res => {
+            let val = JSON.parse(JSON.stringify(res));
+            log(`User Details: ${JSON.stringify(val)}`);
+            return val;
+        }).catch(err => {
+            log(`No User Found with username : ${username}`, true, true);
+            return null
+        })
+
+    return {
+        status: userDetails == null ? MESSAGES.RESPONSE_STATUS.failed : MESSAGES.RESPONSE_STATUS.success,
+        message: userDetails == null ? 'User Not Found' : 'User Details Found',
+        data: { ...userDetails }
+    }
+}
+
+
 module.exports = {
     registerUser,
-    loginUser
+    loginUser,
+    userinfo
 }

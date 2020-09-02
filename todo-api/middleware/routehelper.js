@@ -66,6 +66,37 @@ let login = async (req) => {
     }
 }
 
+// User Info
+
+let userinfo = async (req) => {
+
+    try {
+
+        // let userid = req.user_details.userid;
+        let userid = req.user_details.userid.toString().trim();
+
+        // Validations
+        if (NULLCHECK.includes(userid)) throw new Error('Invalid Request');
+
+        // Core Logic
+        let user = await USER.userinfo(userid);
+
+        // Return response
+        return {
+            status: user.status,
+            message: user.message,
+            data: user.data
+        }
+
+    } catch (err) {
+        return {
+            status: MESSAGES.RESPONSE_STATUS.failed,
+            message: err.message,
+            data: null
+        }
+    }
+}
+
 // Add Todo
 let addTodo = async (req) => {
 
@@ -228,6 +259,7 @@ let todolist = async (req) => {
 module.exports = {
     register,
     login,
+    userinfo,
     addTodo,
     deleteTodo,
     addSubTask,
