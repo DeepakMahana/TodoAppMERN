@@ -36,9 +36,9 @@ app.use(cors())
 
 // Routers
 const userrouter = require('./routers/user')
-app.use('/user', userrouter)
+app.use('/api/user', userrouter)
 const todorouter = require('./routers/todo')
-app.use('/todo', todorouter)
+app.use('/api/todo', todorouter)
 
 const port = process.env.SERVICE_PORT || 5000
 

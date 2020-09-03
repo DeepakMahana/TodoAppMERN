@@ -43,7 +43,6 @@ const styles = (theme) => ({
 class signup extends Component {
 	constructor(props) {
 		super(props);
-
 		this.state = {
 			email: '',
 			username: '',
