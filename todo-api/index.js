@@ -12,10 +12,7 @@ if (process.env.NODE_ENV === 'development') {
 
 // Connect to MongoDB
 const options = {
-  poolSize: 15, // Maintain up to 15 socket connections
-  socketTimeoutMS: 1000, // Close sockets after 5 minute of inactivity
-  connectTimeoutMS: 1000,
-  family: 4, // Use IPv4, skip trying IPv6
+  poolSize: 15,
   keepAlive: true,
   useNewUrlParser: true,
   useCreateIndex: true,
@@ -31,7 +28,6 @@ mongoose.connect(DB_URI, options)
 
 // Middlewares
 app.use(bodyParser.json())
-app.use(bodyParser.raw())
 app.use(cors())
 
 // Routers
