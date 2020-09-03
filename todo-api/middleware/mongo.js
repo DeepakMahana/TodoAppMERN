@@ -15,7 +15,7 @@ module.exports = (callback) => {
         useFindAndModify: false
     };
     
-    const DB_URI = process.env.MONGO_URI;
+    const DB_URI = process.env.MONGO_URI_MLAB;
 
     mongoose.connect(DB_URI, options)
             .then(() => log(`MongoDB Connected ${DB_URI}`))

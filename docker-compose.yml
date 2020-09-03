@@ -2,12 +2,6 @@ version: '3'
 
 services:
 
-    mongo:
-        container_name: mongo
-        image: mongo
-        ports:
-            - '27017:27017'
-
     nginx:
         restart: always
         depends_on:
@@ -21,8 +15,6 @@ services:
 
     api:
         restart: always
-        depends_on: 
-            - mongo
         build: 
            dockerfile: Dockerfile
            context: ./todo-api
@@ -31,7 +23,7 @@ services:
             - ./todo-api:/app
         environment: 
             - LOGS_INFO=true
-            - MONGO_URI=mongodb://mongo:27017/todoapp
+            - MONGO_URI_MLAB=mongodb+srv://dcoder:dcoder123@cluster0.ryzqm.mongodb.net/todoapp
             - SERVICE_PORT=5000
             - JWT_SALT=qwertrtytf
             - BYCRYPT_SALT=10

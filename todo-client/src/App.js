@@ -1,19 +1,21 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import login from './pages/login';
-import signup from './pages/signup';
-import home from './pages/home';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import Login from './pages/login';
+import Signup from './pages/signup';
+import Home from './pages/home';
 import './App.css';
+import { createBrowserHistory } from 'history';
 
 function App() {
+
+  const history = createBrowserHistory();
+
   return (
-    <Router>
+    <Router history={history}>
     <div>
-       <Switch>
-           <Route exact path="/" component={home}/>
-           <Route exact path="/login" component={login}/>
-           <Route exact path="/signup" component={signup}/>
-       </Switch>
+      <Route exact path="/" component={Home}/>
+      <Route path="/login" component={Login}/>
+      <Route path="/signup" component={Signup}/>
     </div>
   </Router>
   );
