@@ -3,36 +3,26 @@ import React, { Component } from 'react';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import { Card, CardActions, CardContent, Divider, Button, Grid, TextField } from '@material-ui/core';
+import { Card, CardActions, CardContent, Divider, Grid, TextField } from '@material-ui/core';
 
-import clsx from 'clsx';
-
-import axios from 'axios';
-import { GET_USER_DETAILS, authMiddleWare, capitalizeFirstLetter, showErrorMessage, showSuccessMessage } from '../util/utility'
+import { capitalizeFirstLetter } from '../util/utility'
 
 const styles = (theme) => ({
-	content: {
-		flexGrow: 1,
-		padding: theme.spacing(3)
-	},
-	toolbar: theme.mixins.toolbar,
 	root: {},
-	details: {
-		display: 'flex'
+	cardheader: {
+		marginTop: '10%',
+		marginLeft: '5%'
 	},
-	avatar: {
-		height: 110,
-		width: 100,
-		flexShrink: 0,
-		flexGrow: 0
+	infocard: {
+		marginLeft: '60%',
+		marginTop: '20%'
+	},
+	details: {
+		display: 'flex',
+		marginTop: '10px'
 	},
 	locationText: {
 		paddingLeft: '15px'
-	},
-	buttonProperty: {
-		position: 'absolute',
-		top: '50%'
 	},
 	uiProgess: {
 		position: 'fixed',
@@ -41,14 +31,6 @@ const styles = (theme) => ({
 		width: '31px',
 		left: '50%',
 		top: '35%'
-	},
-	customError: {
-		color: 'red',
-		fontSize: '0.8rem',
-		marginTop: 10
-	},
-	submitButton: {
-		marginTop: '10px'
 	}
 });
 
@@ -72,37 +54,8 @@ class account extends Component {
 		})
 	}
  
-	// componentWillMount = () => {
-	// 	authMiddleWare(this.props.history);
-	// 	const authToken = localStorage.getItem('AuthToken');
-	// 	axios.defaults.headers.common = { Authorization: `${authToken}` };
-	// 	axios
-	// 		.get(GET_USER_DETAILS)
-	// 		.then((response) => {
-    //             let respData = response.data;
-    //             if(respData.status.toUpperCase() === "FAILED"){
-    //                 this.setState({ errorMsg: 'Error in retrieving the data' });
-	// 				showErrorMessage(respData.message)
-    //             }else{
-	// 				showSuccessMessage(respData.message)
-    //                 this.setState({
-    //                     email: response.data.userCredentials.firstName,
-    //                     username: response.data.userCredentials.lastName,
-    //                     profilePicture: ``,
-    //                     uiLoading: false
-    //                 });
-    //             }
-	// 		})
-	// 		.catch((error) => {
-	// 			if(error.response.status === 403) {
-	// 				this.props.history.push('/login')
-	// 			}
-	// 			this.setState({ errorMsg: 'Error in retrieving the data' });
-	// 		});
-	// };
-
 	render() {
-		const { classes, ...rest } = this.props;
+		const { classes } = this.props;
 		if (this.state.uiLoading === true) {
 			return (
 				<main className={classes.content}>
@@ -113,30 +66,31 @@ class account extends Component {
 		} else {
 			return (
 
-				<main className={classes.content}>
-					<div className={classes.toolbar} />
+				<main>
 
-					
-
-						<Card {...rest} className={clsx(classes.root, classes)}>
-							<CardContent>
-								<div className={classes.details}>
-									<div>
-										<Typography className={classes.locationText} gutterBottom variant="h4">
-											Welcome {capitalizeFirstLetter(this.state.username)}
-										</Typography>
-									</div>
+					<Card className={classes.cardheader}>
+						<CardContent>
+							<div className={classes.details}>
+								<div>
+									<Typography className={classes.locationText} gutterBottom variant="h4">
+										Welcome {capitalizeFirstLetter(this.state.username)}
+									</Typography>
 								</div>
-							</CardContent>
-							<Divider />
-						</Card>
-					
-					
+							</div>
+						</CardContent>
+						<Divider />
+					</Card>
 
-					<br />
 
-					
-						<Card {...rest} className={clsx(classes.root, classes)}>
+					<Grid
+						container
+						spacing={0}
+						direction="column"
+						alignItems="center"
+						justify="center"
+						className={classes.infocard}
+					>
+						<Card>
 							<form autoComplete="off" noValidate>
 								<Divider />
 								<CardContent>
@@ -148,7 +102,7 @@ class account extends Component {
 												label="User Name"
 												margin="dense"
 												name="userHandle"
-												disabled={false}
+												disabled={true}
 												variant="outlined"
 												value={this.state.username}
 												onChange={this.handleChange}
@@ -162,34 +116,18 @@ class account extends Component {
 												margin="dense"
 												name="email"
 												variant="outlined"
-												disabled={false}
+												disabled={true}
 												value={this.state.email}
 												onChange={this.handleChange}
 											/>
 										</Grid>
-									
 									</Grid>
 								</CardContent>
 								<Divider />
 								<CardActions />
 							</form>
 						</Card>
-						<Button
-							color="primary"
-							variant="contained"
-							type="submit"
-							className={classes.submitButton}
-							onClick={this.updateFormValues}
-							disabled={
-								!this.state.username ||
-								!this.state.email
-							}
-						>
-							Save details
-							{this.state.buttonLoading && <CircularProgress size={30} className={classes.progess} />}
-						</Button>
-
-					
+					</Grid>
 				</main>
 			);
 		}

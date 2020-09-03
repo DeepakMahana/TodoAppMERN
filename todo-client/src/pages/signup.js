@@ -5,13 +5,13 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import withStyles from '@material-ui/core/styles/withStyles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import axios from 'axios';
+import SignPic from '../images/TorreLogo.png';
 import { showSuccessMessage, showErrorMessage, USER_REGISTER_API } from '../util/utility';
 
 const styles = (theme) => ({
@@ -22,8 +22,11 @@ const styles = (theme) => ({
 		alignItems: 'center'
 	},
 	avatar: {
-		margin: theme.spacing(1),
-		backgroundColor: theme.palette.secondary.main
+		height: 95,
+		width: 95,
+		flexShrink: 0,
+		flexGrow: 0,
+		marginTop: 20
 	},
 	form: {
 		width: '100%', // Fix IE 11 issue.
@@ -48,14 +51,6 @@ class signup extends Component {
 			errors: [],
 			loading: false
 		};
-	}
-
-	componentWillReceiveProps(nextProps) {
-		if (nextProps.UI.errors) {
-			this.setState({
-				errors: nextProps.UI.errors
-			});
-		}
 	}
 
 	handleChange = (event) => {
@@ -101,9 +96,7 @@ class signup extends Component {
 			<Container component="main" maxWidth="xs">
 				<CssBaseline />
 				<div className={classes.paper}>
-					<Avatar className={classes.avatar}>
-						<LockOutlinedIcon />
-					</Avatar>
+					<Avatar src={SignPic} className={classes.avatar} />
 					<Typography component="h1" variant="h5">
 						Sign up
 					</Typography>
@@ -178,7 +171,7 @@ class signup extends Component {
 						<Grid container justify="flex-end">
 							<Grid item>
 								<Link href="login" variant="body2">
-									Already have an account? Sign in
+									Already have an account ? Sign in
 								</Link>
 							</Grid>
 						</Grid>

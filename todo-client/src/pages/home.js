@@ -1,8 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios';
-
-import Account from '../components/account';
-import Todo from '../components/todo';
 
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
@@ -20,9 +16,12 @@ import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import NotesIcon from '@material-ui/icons/Notes';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import ProfilePic from '../images/profile.jpg';
 
-import { GET_USER_DETAILS, authMiddleWare, capitalizeFirstLetter, showErrorMessage, showSuccessMessage } from '../util/utility'
+import axios from 'axios';
+import ProfilePic from '../images/TorreLogo.png';
+import Account from '../components/account';
+import Todo from '../components/todo';
+import { GET_USER_DETAILS, authMiddleWare, capitalizeFirstLetter } from '../util/utility'
 
 const drawerWidth = 240;
 
@@ -102,9 +101,7 @@ class home extends Component {
                 let respData = response.data;
                 if(respData.status.toUpperCase() === "FAILED"){
                     this.setState({ errorMsg: 'Error in retrieving the data' });
-					// showErrorMessage(respData.message)
                 }else{
-					// showSuccessMessage(respData.message)
                     this.setState({
                         email: respData.data.email,
                         username: respData.data.username,
@@ -130,15 +127,18 @@ class home extends Component {
 			);
 		} else {
 			return (
+
 				<div className={classes.root}>
 					<CssBaseline />
+
 					<AppBar position="fixed" className={classes.appBar}>
 						<Toolbar>
 							<Typography variant="h6" noWrap>
-								TodoApp
+								Todo Task Manager
 							</Typography>
 						</Toolbar>
 					</AppBar>
+
 					<Drawer
 						className={classes.drawer}
 						variant="permanent"
@@ -152,37 +152,33 @@ class home extends Component {
                             <Avatar src={ProfilePic} className={classes.avatar} />
 							<p>
 								{' '}
-								{capitalizeFirstLetter(this.state.username)}
+								<Typography variant="h6" noWrap>
+									{capitalizeFirstLetter(this.state.username)}
+								</Typography>
 							</p>
 						</center>
 						<Divider />
 						<List>
 							<ListItem button key="Todo" onClick={this.loadTodoPage}>
-								<ListItemIcon>
-									{' '}
+								<ListItemIcon> {' '}
 									<NotesIcon />{' '}
 								</ListItemIcon>
 								<ListItemText primary="Todo's" />
 							</ListItem>
-
 							<ListItem button key="Account" onClick={this.loadAccountPage}>
-								<ListItemIcon>
-									{' '}
+								<ListItemIcon> {' '}
 									<AccountBoxIcon />{' '}
 								</ListItemIcon>
 								<ListItemText primary="Account" />
 							</ListItem>
-
 							<ListItem button key="Logout" onClick={this.logoutHandler}>
-								<ListItemIcon>
-									{' '}
+								<ListItemIcon> {' '}
 									<ExitToAppIcon />{' '}
 								</ListItemIcon>
 								<ListItemText primary="Logout" />
 							</ListItem>
 						</List>
 					</Drawer>
-
 					<div>{this.state.render ? <Account data = { this.state }/> : <Todo />}</div>
 				</div>
 			);

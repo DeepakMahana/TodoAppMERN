@@ -5,13 +5,13 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Container from '@material-ui/core/Container';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import axios from 'axios';
+import LoginPic from '../images/TorreLogo.png';
 import {  showSuccessMessage, showErrorMessage, USER_LOGIN_API } from '../util/utility';
 
 const styles = (theme) => ({
@@ -22,8 +22,11 @@ const styles = (theme) => ({
 		alignItems: 'center'
 	},
 	avatar: {
-		margin: theme.spacing(1),
-		backgroundColor: theme.palette.secondary.main
+		height: 95,
+		width: 95,
+		flexShrink: 0,
+		flexGrow: 0,
+		marginTop: 20
 	},
 	form: {
 		width: '100%',
@@ -52,14 +55,6 @@ class login extends Component {
 			errors: [],
 			loading: false
 		};
-	}
-
-	componentWillReceiveProps(nextProps) {
-		if (nextProps.UI.errors) {
-			this.setState({
-				errors: nextProps.UI.errors
-			});
-		}
 	}
 
 	handleChange = (event) => {
@@ -109,9 +104,7 @@ class login extends Component {
 			<Container component="main" maxWidth="xs">
 				<CssBaseline />
 				<div className={classes.paper}>
-					<Avatar className={classes.avatar}>
-						<LockOutlinedIcon />
-					</Avatar>
+					<Avatar src={LoginPic} className={classes.avatar} />
 					<Typography component="h1" variant="h5">
 						Login
 					</Typography>
@@ -159,7 +152,7 @@ class login extends Component {
 						<Grid container>
 							<Grid item>
 								<Link href="signup" variant="body2">
-									{"Don't have an account? Sign Up"}
+									{"Don't have an account ? Sign Up"}
 								</Link>
 							</Grid>
 						</Grid>

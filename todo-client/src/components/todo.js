@@ -1,20 +1,12 @@
 import React, { Component } from 'react'
 
 import withStyles from '@material-ui/core/styles/withStyles';
-import clsx from 'clsx';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
-import Slide from '@material-ui/core/Slide';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardHeader from '@material-ui/core/CardHeader';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
@@ -28,9 +20,7 @@ import TodoCard from './todocard';
 import { GET_USER_TODOS_API, ADD_TODO_API, authMiddleWare, showSuccessMessage, showErrorMessage} from '../util/utility';
 
 const styles = (theme) => ({
-    root: {
-    
-    },
+    root: {},
 	title: {
 		marginLeft: theme.spacing(2),
 		flex: 1
@@ -47,7 +37,7 @@ const styles = (theme) => ({
 		position: 'fixed',
 		top: 70,
         right: 0,
-        marginTop: '10px',
+        marginTop: '20px',
         marginRight: '10px'
 	},
 	form: {
@@ -118,8 +108,7 @@ class todo extends Component {
 			errors: [],
 			open: false,
 			uiLoading: true,
-			buttonType: '',
-            viewOpen: false
+			buttonType: ''
 		};
     }
 
@@ -158,45 +147,12 @@ class todo extends Component {
 			});
 	};
 
-	deleteTodoHandler(data) {
-		authMiddleWare(this.props.history);
-		const authToken = localStorage.getItem('AuthToken');
-		axios.defaults.headers.common = { Authorization: `${authToken}` };
-		let todoId = data.todo.todoId;
-		axios
-			.delete(`todo/${todoId}`)
-			.then(() => {
-				window.location.reload();
-			})
-			.catch((err) => {
-				console.log(err);
-			});
-	}
-
-	handleEditClickOpen(data) {
-		this.setState({
-			title: data.todo.title,
-			body: data.todo.body,
-			todoId: data.todo.todoId,
-			buttonType: 'Edit',
-			open: true
-		});
-	}
-
-	handleViewOpen(data) {
-		this.setState({
-			title: data.todo.title,
-			body: data.todo.body,
-			viewOpen: true
-		});
-	}
-
 	render() {
 		
         dayjs.extend(relativeTime);
         
 		const { classes } = this.props;
-		const { open, errors, viewOpen } = this.state;
+		const { open, errors } = this.state;
 
 		const handleClickOpen = () => {
 			this.setState({
@@ -235,10 +191,6 @@ class todo extends Component {
                     showErrorMessage(error)
 					this.setState({ open: false });
 				});
-		};
-
-		const handleViewClose = () => {
-			this.setState({ viewOpen: false });
 		};
 
 		const handleClose = (event) => {
@@ -334,36 +286,7 @@ class todo extends Component {
 						    ))
                         }
 					</Grid>
-
-					{/* <Dialog
-						onClose={handleViewClose}
-						aria-labelledby="customized-dialog-title"
-						open={viewOpen}
-						fullWidth
-						classes={{ paperFullWidth: classes.dialogeStyle }}
-					>
-						<DialogTitle id="customized-dialog-title" onClose={handleViewClose}>
-							{this.state.title}
-						</DialogTitle>
-						<DialogContent dividers>
-							<TextField
-								fullWidth
-								id="todoDetails"
-								name="body"
-								multiline
-								readonly
-								rows={1}
-								rowsMax={25}
-								value={this.state.body}
-								InputProps={{
-									disableUnderline: true
-								}}
-							/>
-						</DialogContent>
-					</Dialog> */}
-
 				</main>
-        
             );
 		}
 	}
