@@ -35,7 +35,7 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname + '/client/build/index.html'));
 });
 
-const port = process.env.SERVICE_PORT || 5000
+const port = process.env.PORT || 5000
 const server = http.createServer(app)
 server.listen(port, () => {
   log(`REST serving on port ${port}`.green.bold)
