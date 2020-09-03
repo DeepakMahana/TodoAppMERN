@@ -1,5 +1,4 @@
 const express = require('express')
-const http = require('http')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const log = require('./middleware/log')
@@ -11,7 +10,8 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // Connect to MongoDB
-const mongo = require('./middleware/mongo');
+const ConnectToDB = require('./middleware/mongo')
+ConnectToDB()
 
 // Middlewares
 app.use(bodyParser.json())
@@ -20,12 +20,12 @@ app.use(cors())
 
 // Routers
 const userrouter = require('./routers/user')
-app.use('/api/user/', userrouter)
+app.use('/user', userrouter)
 const todorouter = require('./routers/todo')
-app.use('/api/todo/', todorouter)
+app.use('/todo', todorouter)
 
-const port = process.env.SERVICE_PORT || 3000
-const server = http.createServer(app)
-server.listen(port, () => {
+const port = process.env.SERVICE_PORT || 5000
+
+app.listen(port, () => {
   log(`REST serving on port ${port}`.green.bold)
 })

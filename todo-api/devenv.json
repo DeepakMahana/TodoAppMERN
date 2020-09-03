@@ -1,7 +1,8 @@
 {
     "LOGS_INFO": true,
-    "MONGO_URI": "mongodb+srv://dcoder:dcoder123@cluster0.ryzqm.mongodb.net/todoapp",
-    "SERVICE_PORT": 3000,
+    "MONGO_URI_MLAB": "mongodb+srv://dcoder:dcoder123@cluster0.ryzqm.mongodb.net/todoapp",
+    "MONGO_URI": "mongodb://mongo:27017/todoapp",
+    "SERVICE_PORT": 5000,
     "JWT_SALT": "qwertrtytf",
     "BYCRYPT_SALT": 10
 }

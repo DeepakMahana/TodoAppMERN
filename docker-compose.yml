@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+
+    mongo:
+        container_name: mongo
+        image: mongo
+        ports:
+            - '27017:27017'
+
+    nginx:
+        restart: always
+        depends_on:
+            - api
+            - client
+        build: 
+            dockerfile: Dockerfile
+            context: ./nginx
+        ports: 
+            - '8080:80'
+
+    api:
+        restart: always
+        depends_on: 
+            - mongo
+        build: 
+           dockerfile: Dockerfile
+           context: ./todo-api
+        volumes:
+            - /app/node_modules
+            - ./todo-api:/app
+        environment: 
+            - LOGS_INFO=true
+            - MONGO_URI=mongodb://mongo:27017/todoapp
+            - SERVICE_PORT=5000
+            - JWT_SALT=qwertrtytf
+            - BYCRYPT_SALT=10
+
+    client:
+        stdin_open: true
+        build: 
+            dockerfile: Dockerfile
+            context: ./todo-client
+        volumes:
+            - /app/node_modules
+            - ./todo-client:/app
