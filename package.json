@@ -1,7 +1,7 @@
 {
-  "name": "todo-api",
+  "name": "TodoApp",
   "version": "1.0.0",
-  "description": "TodoApp API",
+  "description": "TodoAppAPI",
   "main": "index.js",
   "scripts": {
     "start": "NODE_ENV=development node index.js",
